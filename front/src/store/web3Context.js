@@ -6,8 +6,8 @@ import WalletConnect from "@walletconnect/web3-provider";
 
 import config from "../config.js";
 
-//import NftContractArtifact from "../contracts/NftContract.json";
-//import NftContractAddress from "../contracts/NftContract_address.json";
+//import GameContractArtifact from "../contracts/GameContract.json";
+//import GameContractAddress from "../contracts/GameContract_address.json";
 
 const Web3Context = React.createContext({
     web3: null,
@@ -23,6 +23,8 @@ export const Web3ContextProvider = (props) => {
     const [signer, setSigner] = useState(null);
     const [account, setAccount] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [loadingGame, setLoadingGame] = useState(false);
+    const [gameContract, setGameContract] = useState(null);
 
     useEffect(() => {
         const initUrlWeb3 = async () => {
@@ -52,11 +54,11 @@ export const Web3ContextProvider = (props) => {
 
     const initContracts = (provider) => {
         const signer = provider.getSigner();
-        /*const nftContract = new ethers.Contract(
-            NftContractAddress.Contract,
-            NftContractArtifact.abi,
+        /*const contract = new ethers.Contract(
+            GameContractAddress.Contract,
+            GameContractArtifact.abi,
             signer);
-        setNftContract(nftContract);*/
+        setGameContract(contract);*/
     }
 
     const initWeb3Modal = async () => {
@@ -107,14 +109,106 @@ export const Web3ContextProvider = (props) => {
         }
     }
 
+    const joinGame = async (callback) => {
+        try {
+            setLoadingGame(true);
+            const tx = await gameContract.joinGame('commitment');
+
+            tx.wait().then(() => {
+                setLoadingGame(false);
+                if (callback) callback(true);
+            });
+        }
+        catch (e) {
+            console.log({ e });
+            if (callback) callback(false);
+            setLoadingGame(false);
+        }
+    }
+
+    const voteToSave = async (players, weights, callback) => {
+        try {
+            const playersSorted = players.sort();
+            setLoadingGame(true);
+            const tx = await gameContract.voteToSave(players, weights);
+            
+            tx.wait().then(() => {
+                setLoadingGame(false);
+                if (callback) callback(true);
+            });
+            setLoadingGame(false);
+        } catch (e) {
+            console.log({ e });
+            if (callback) callback(false);
+            setLoadingGame(false);
+        }
+    }
+
+    const reveal = async (seed, nonce, callback) => {
+        try {
+            setLoadingGame(true);
+            const tx = await gameContract.reveal(seed, nonce);
+
+            tx.wait().then(() => {
+                setLoadingGame(false);
+                if (callback) callback(true);
+            });
+            setLoadingGame(false);
+        } catch (e) {
+            console.log({ e });
+            if (callback) callback(false);
+            setLoadingGame(false);
+        }
+    }
+
+    const flip = async (callback) => {
+        try {
+            setLoadingGame(true);
+            const tx = await gameContract.flip();
+
+            tx.wait().then(() => {
+                setLoadingGame(false);
+                if (callback) callback(true);
+            });
+            setLoadingGame(false);
+        } catch (e) {
+            console.log({ e });
+            if (callback) callback(false);
+            setLoadingGame(false);
+        }
+    }
+
+
+    const claimWinnings = async (callback) => {
+        try {
+            setLoadingGame(true);
+            const tx = await gameContract.claimWinnings();
+
+            tx.wait().then(() => {
+                setLoadingGame(false);
+                if (callback) callback(true);
+            });
+            setLoadingGame(false);
+        } catch (e) {
+            console.log({ e });
+            if (callback) callback(false);
+            setLoadingGame(false);
+        }
+    }
+
     return (
         <Web3Context.Provider
             value={{
                 web3,
                 signer,
                 loading,
-                initWeb3Modal,
                 account,
+                initWeb3Modal,
+                joinGame,
+                voteToSave,
+                reveal,
+                flip,
+                claimWinnings,
             }}>
             {props.children}
         </Web3Context.Provider>

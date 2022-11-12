@@ -99,6 +99,20 @@ export default function Home(props) {
       game: true,
       display: true,
     },
+    reveal: {
+      action: () => [],
+      description: 'reveal your identity.',
+      auth: true,
+      game: true,
+      display: true,
+    },
+    flip: {
+      action: () => [],
+      description: 'change team.',
+      auth: true,
+      game: true,
+      display: true,
+    },
     claim: {
       action: () => [],
       description: 'get your rewards.',
