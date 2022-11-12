@@ -47,6 +47,7 @@ contract TheCensorshipGame is Ownable {
   uint256 public round;
   uint256 public cutOffPoint;
   bytes32 public publicSeed;
+  address[] public players;
 
 
   mapping(address => ScoreListItem) public scoreList;
@@ -60,14 +61,6 @@ contract TheCensorshipGame is Ownable {
   constructor() payable {
     PRIZE_POOL = msg.value;
     scoreList[scoreListGuard] = ScoreListItem(address(0), type(uint256).max, address(0));
-  }
-
-  function getPlayers() returns (address[] memory players) {
-    address candidate = scoreListGuard;
-    for(uint256 i; i < scoreListLength; i++) {
-      players.push(scoreList[candidate].next);
-      candidate = scoreList[candidate].next;
-    }
   }
 
   function _append(address player) internal {
@@ -118,6 +111,10 @@ contract TheCensorshipGame is Ownable {
     }
   }
 
+  function playersList() external view returns (address[] memory) {
+      return players;
+  }
+
   function joinGame(bytes32 commitment, string calldata name) external {
     // require(ETH_BRNO_NFT.balanceOf(msg.sender) > 0);
     require(gameStart == 0);
@@ -125,6 +122,7 @@ contract TheCensorshipGame is Ownable {
     require(playerDetails[msg.sender].commitment == bytes32(0));
 
     _append(msg.sender);
+    players.push(msg.sender);
     playerDetails[msg.sender] = Player(
       commitment, 0, 0, type(uint64).max, name, false
     );
@@ -203,7 +201,7 @@ contract TheCensorshipGame is Ownable {
 
   function claimWinnings() external {
     require(playerDetails[msg.sender].withdrew == false, "ALREADY WITHDREW");
-    require(cutOffPoint == 0), "GAME NOT OVER";
+    require(cutOffPoint == 0, "GAME NOT OVER");
     uint256 winningTeam = playerDetails[scoreList[scoreListGuard].next].revealedRole;
     require(winningTeam < 2, "WINNER DIDNT REVEAL");
     require(winningTeam == playerDetails[msg.sender].revealedRole, "NOT A WINNER");
@@ -237,7 +235,7 @@ contract TheCensorshipGame is Ownable {
   modifier notCensored() {
     if (round > 0) {
       require(
-        scoreList[cutOffAddress].score =<
+        scoreList[cutOffAddress].score <=
         scoreList[msg.sender].score
       );
     }
