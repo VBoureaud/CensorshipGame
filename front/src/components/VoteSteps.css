@@ -1,0 +1,11 @@
+.ant-steps-item-wait > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+	color: rgba(255, 255, 255, 0.85);
+}
+
+.ant-steps-item-process > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+	color: white;
+}
+
+.ant-steps-item-finish > .ant-steps-item-container > .ant-steps-item-content > .ant-steps-item-title {
+	color: rgba(255, 255, 255, 0.85);
+}
