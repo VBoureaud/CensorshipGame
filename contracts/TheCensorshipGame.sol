@@ -13,7 +13,7 @@ contract TheCensorshipGame is Ownable {
   IERC721 constant ETH_BRNO_NFT = IERC721(0xcA20a3AAF600a873F9F6b5B663Db7B9275f16ce9);
   uint256 constant ROUND_LENGTH = 10 minutes;
   uint256 constant VOTE_BUDGET = 100;
-  uint256 immutable private PRIZE_POOL;
+  uint256 immutable public PRIZE_POOL;
 
   event GameStarted(uint256 startTime, bytes32 random);
   event PlayerRevealed(address player, TEAM team);
@@ -49,13 +49,13 @@ contract TheCensorshipGame is Ownable {
   bytes32 public publicSeed;
 
 
-  mapping(address => ScoreListItem) private scoreList;
-  uint256 private scoreListLength;
-  address constant private scoreListGuard = address(1);
-  address private scoreListTail = address(1);
+  mapping(address => ScoreListItem) public scoreList;
+  uint256 public scoreListLength;
+  address constant public scoreListGuard = address(1);
+  address public scoreListTail = address(1);
   address public cutOffAddress;
   uint256 public roundVoteCount;
-  uint256 private roundTimer;
+  uint256 public roundTimer;
 
   constructor() payable {
     PRIZE_POOL = msg.value;
@@ -110,7 +110,7 @@ contract TheCensorshipGame is Ownable {
   }
 
   function joinGame(bytes32 commitment, string calldata name) external {
-    require(ETH_BRNO_NFT.balanceOf(msg.sender) > 0);
+    // require(ETH_BRNO_NFT.balanceOf(msg.sender) > 0);
     require(gameStart == 0);
     require(commitment != bytes32(0));
     require(playerDetails[msg.sender].commitment == bytes32(0));
@@ -169,7 +169,6 @@ contract TheCensorshipGame is Ownable {
   }
 
   function reveal(bytes32 seed, bytes32 nonce) external {
-    // TODO ENSURE REVEAL HAPPENS AT RIGHT STAGE
     require(gameStart > 0);
     require(round % 2 == 1);
     bytes32 commit = playerDetails[msg.sender].commitment;

@@ -1,6 +1,20 @@
 [
 	{
 		"inputs": [],
+		"name": "claimWinnings",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "endRound",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"stateMutability": "payable",
 		"type": "constructor"
 	},
@@ -35,6 +49,24 @@
 		],
 		"name": "GameStarted",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "commitment",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			}
+		],
+		"name": "joinGame",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -89,7 +121,81 @@
 	},
 	{
 		"inputs": [],
-		"name": "claimWinnings",
+		"name": "recover",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "seed",
+				"type": "bytes32"
+			},
+			{
+				"internalType": "bytes32",
+				"name": "nonce",
+				"type": "bytes32"
+			}
+		],
+		"name": "reveal",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "bytes32",
+				"name": "random",
+				"type": "bytes32"
+			}
+		],
+		"name": "startGame",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address[]",
+				"name": "saved",
+				"type": "address[]"
+			},
+			{
+				"internalType": "uint256[]",
+				"name": "weights",
+				"type": "uint256[]"
+			},
+			{
+				"internalType": "bool",
+				"name": "flip",
+				"type": "bool"
+			}
+		],
+		"name": "voteToSave",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -122,13 +228,6 @@
 	},
 	{
 		"inputs": [],
-		"name": "endRound",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
 		"name": "gameStart",
 		"outputs": [
 			{
@@ -138,24 +237,6 @@
 			}
 		],
 		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "bytes32",
-				"name": "commitment",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "string",
-				"name": "name",
-				"type": "string"
-			}
-		],
-		"name": "joinGame",
-		"outputs": [],
-		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -217,6 +298,19 @@
 	},
 	{
 		"inputs": [],
+		"name": "PRIZE_POOL",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
 		"name": "publicSeed",
 		"outputs": [
 			{
@@ -230,39 +324,20 @@
 	},
 	{
 		"inputs": [],
-		"name": "recover",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
+		"name": "round",
+		"outputs": [
 			{
-				"internalType": "bytes32",
-				"name": "seed",
-				"type": "bytes32"
-			},
-			{
-				"internalType": "bytes32",
-				"name": "nonce",
-				"type": "bytes32"
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
-		"name": "reveal",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
 		"inputs": [],
-		"name": "round",
+		"name": "roundTimer",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -289,50 +364,69 @@
 	{
 		"inputs": [
 			{
-				"internalType": "bytes32",
-				"name": "random",
-				"type": "bytes32"
-			}
-		],
-		"name": "startGame",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
 				"internalType": "address",
-				"name": "newOwner",
+				"name": "",
 				"type": "address"
 			}
 		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"name": "scoreList",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "prev",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "score",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "next",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"inputs": [
+		"inputs": [],
+		"name": "scoreListGuard",
+		"outputs": [
 			{
-				"internalType": "address[]",
-				"name": "saved",
-				"type": "address[]"
-			},
-			{
-				"internalType": "uint256[]",
-				"name": "weights",
-				"type": "uint256[]"
-			},
-			{
-				"internalType": "bool",
-				"name": "flip",
-				"type": "bool"
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
-		"name": "voteToSave",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "scoreListLength",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "scoreListTail",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
 		"type": "function"
 	}
 ]
