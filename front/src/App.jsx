@@ -105,10 +105,10 @@ function App() {
           </Switch>
         </div>
       </Router>
-      <Footer style={{ textAlign: "center", background: "#252a33" }}>
+      {/*<Footer style={{ textAlign: "center", background: "#252a33" }}>
         <Text style={{ display: "block", color: "white" }}>Built at ETHBrno 2022 - v{config.version}</Text>
         <Text style={{ display: "block", color: "white" }}>Find us on <a rel="noreferrer" target="_blank" href="https://github.com/VBoureaud/CensorshipGame">Github</a></Text>
-      </Footer>
+      </Footer>*/}
     </Layout>
   );
 }

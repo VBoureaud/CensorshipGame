@@ -1,14 +1,19 @@
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import Terminal, { ColorMode, TerminalInput, TerminalOutput } from 'react-terminal-ui';
 import Web3Context from "../store/web3Context";
+import Doughnut from "../components/Doughnut";
+import VoteList from "../components/VoteList";
+import VoteSteps from "../components/VoteSteps";
+
 //import Web2Context from "../store/web2Context";
 //import config from "../config.js";
 import "./Home.css";
 
 export default function Home(props) {
   const [isAuth, setIsAuth] = useState(false);  
-  const [inGame, setInGame] = useState(false);
+  const [inGame, setInGame] = useState(true);
+  const [readOnly, setReadOnly] = useState(false);
   const [lineData, setLineData] = useState([
     <TerminalOutput>Welcome to Censhorship Game!&#128075;&#128377;&#127942;</TerminalOutput>,
     <TerminalOutput>Join the game and try to make your color team survive.</TerminalOutput>,
@@ -24,6 +29,7 @@ export default function Home(props) {
   useEffect(() => {
     let ld = [...lineData];
     ld.push(helpFn(commands));
+    //ld.push(commands['vote'].action());
     setLineData(ld);
   }, []);
 
@@ -55,6 +61,13 @@ export default function Home(props) {
     return <></>;
   }
 
+  const handleVote = (listVote, changeTeam) => {
+    console.log({ listVote });
+    console.log({ changeTeam });
+    setReadOnly(false);
+    message.success('Processing complete!');
+    clearInput();
+  }
 
   const commands = {
     ls: {
@@ -65,7 +78,7 @@ export default function Home(props) {
       display: false,
     },
     pwd: {
-      action: () => <>/home/{navigator.appCodeName}</>,
+      action: () => <>/navigator/{navigator.appCodeName}</>,
       description: '',
       auth: false,
       game: false,
@@ -86,14 +99,22 @@ export default function Home(props) {
       display: true,
     },
     status: {
-      action: () => [],
+      action: () => <>
+        <Doughnut values={[10,15]} />
+        <TerminalOutput>There is <b>10</b> members censured from team blue and <b>15</b> from team red.</TerminalOutput>
+        <TerminalOutput>We are <b>Wave 3</b>. You are still <b>alive</b>.</TerminalOutput>
+        <TerminalOutput>Time to vote !</TerminalOutput>
+      </>,
       description: 'display the game status.',
       auth: false,
       game: false,
       display: true,
     },
     vote: {
-      action: () => [],
+      action: () => 
+        <VoteSteps
+          onConfirm={handleVote}
+        />,
       description: 'confirm your choices.',
       auth: true,
       game: true,
@@ -106,13 +127,13 @@ export default function Home(props) {
       game: true,
       display: true,
     },
-    flip: {
+    /*flip: {
       action: () => [],
       description: 'change team.',
       auth: true,
       game: true,
       display: true,
-    },
+    },*/
     claim: {
       action: () => [],
       description: 'get your rewards.',
@@ -122,7 +143,7 @@ export default function Home(props) {
     },
     clear: {
       action: () => [],
-      description: 'refresh the display.',
+      description: 'clean the display.',
       auth: false,
       game: false,
       display: true,
@@ -142,18 +163,29 @@ export default function Home(props) {
     setLineData(ld);
   }
 
+  function clearInput () {
+    setLineData([]);
+  }
+
   function onInput (input) {
     let ld = [...lineData];
     ld.push(<TerminalInput>{input}</TerminalInput>);
     const keys = Object.keys(commands);
     const userInput = input.toLocaleLowerCase().trim();
-    if (keys.indexOf(userInput) === -1)
+    if (readOnly)
+      ld.push(<TerminalOutput>You need to finish your voting process before continuing.</TerminalOutput>);
+    else if (keys.indexOf(userInput) === -1)
       ld.push(<TerminalOutput>Unrecognized command</TerminalOutput>);
     else if (userInput === 'clear')
       ld = [];
     else {
-      const output = commands[userInput].action(commands);
-      ld.push(output);
+      if ((commands[userInput].auth && !isAuth)
+      || (commands[userInput].game && !inGame))
+        ld.push(<TerminalOutput>Need permissions</TerminalOutput>);
+      else {
+        ld.push(commands[userInput].action(commands));
+        if (userInput === 'vote') setReadOnly(true);
+      }
     }
     setLineData(ld);
   }

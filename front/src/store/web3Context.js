@@ -6,8 +6,8 @@ import WalletConnect from "@walletconnect/web3-provider";
 
 import config from "../config.js";
 
-//import GameContractArtifact from "../contracts/GameContract.json";
-//import GameContractAddress from "../contracts/GameContract_address.json";
+import GameContractArtifact from "../contracts/GameContract.json";
+import GameContractAddress from "../contracts/GameContract_address.json";
 
 const Web3Context = React.createContext({
     web3: null,
@@ -33,7 +33,7 @@ export const Web3ContextProvider = (props) => {
                 const provider = new ethers.providers.JsonRpcProvider(config.PROD.RPC);
                 setWeb3(provider);
                 console.log("No web3 instance injected, using Local web3.");
-                //initContracts(provider);
+                initContracts(provider);
             } catch (e) {
                 console.log(e);
             } finally {
@@ -54,11 +54,12 @@ export const Web3ContextProvider = (props) => {
 
     const initContracts = (provider) => {
         const signer = provider.getSigner();
-        /*const contract = new ethers.Contract(
+        const contract = new ethers.Contract(
             GameContractAddress.Contract,
             GameContractArtifact.abi,
             signer);
-        setGameContract(contract);*/
+        setGameContract(contract);
+        console.log({ contract });
     }
 
     const initWeb3Modal = async () => {
@@ -101,7 +102,7 @@ export const Web3ContextProvider = (props) => {
             setWeb3(provider);
             setSigner(signer);
             setAccount(newAcc);
-            //initContracts(provider);
+            initContracts(provider);
         } catch (e) {
             console.log(e);
         } finally {
@@ -199,7 +200,7 @@ export const Web3ContextProvider = (props) => {
     return (
         <Web3Context.Provider
             value={{
-                web3,
+                //web3,
                 signer,
                 loading,
                 account,
