@@ -1,5 +1,6 @@
 import { Spin, message } from "antd";
 import React, { useContext, useEffect, useState } from "react";
+import { addslashes } from "../utils";
 import Terminal, { ColorMode, TerminalInput, TerminalOutput } from 'react-terminal-ui';
 import Web3Context from "../store/web3Context";
 import Doughnut from "../components/Doughnut";
@@ -23,6 +24,8 @@ export default function Home(props) {
     loading,
     account,
     initWeb3Modal,
+    joinGame,
+    getStatus,
   } = useContext(Web3Context);
 
   // DidMount
@@ -30,6 +33,7 @@ export default function Home(props) {
     let ld = [...lineData];
     ld.push(helpFn(commands));
     //ld.push(commands['vote'].action());
+    //ld.push(commands['join'].action(null, 'bob'));
     setLineData(ld);
   }, []);
 
@@ -64,6 +68,25 @@ export default function Home(props) {
   const handleVote = (listVote, changeTeam) => {
     console.log({ listVote });
     console.log({ changeTeam });
+
+    const listVoteSorted = [];
+    const addresses = listVote.map(elt => elt.address).sort();
+    console.log({ addresses });
+    let i = 0;
+    while (listVoteSorted.length != listVote.length) {
+      const current = addresses[listVoteSorted.length];
+      if (listVote[i].address == current) {
+        listVoteSorted.push(listVote[i]);
+        i = 0;
+      } else {
+        i++;
+      }
+    }
+
+    const weightSorted = listVoteSorted.map(elt => elt.value);
+    console.log({ listVoteSorted });
+    console.log({ weightSorted });
+
     setReadOnly(false);
     message.success('Processing complete!');
     clearInput();
@@ -92,19 +115,25 @@ export default function Home(props) {
       display: true,
     },
     join: {
-      action: () => [],
+      action: (commands, name) => { joinGame(name, (text) => addInput([<TerminalInput>join {name}</TerminalInput>, text])) },
       description: 'join the game.',
       auth: true,
       game: false,
       display: true,
+      needArg: true,
+      example: 'join username'
     },
     status: {
-      action: () => <>
-        <Doughnut values={[10,15]} />
-        <TerminalOutput>There is <b>10</b> members censured from team blue and <b>15</b> from team red.</TerminalOutput>
-        <TerminalOutput>We are <b>Wave 3</b>. You are still <b>alive</b>.</TerminalOutput>
-        <TerminalOutput>Time to vote !</TerminalOutput>
-      </>,
+      action: () => { 
+        getStatus((listPlayers) => addInput([
+          <TerminalInput>status</TerminalInput>,
+          <Doughnut values={[10,15]} />,
+          <TerminalOutput>There is <b>10</b> members censured from team blue and <b>15</b> from team red.</TerminalOutput>,
+          <TerminalOutput>We are <b>Wave 3</b>. You are still <b>alive</b>.</TerminalOutput>,
+          <TerminalOutput>Total <b>{listPlayers.length}</b> players.</TerminalOutput>,
+          <TerminalOutput>Time to vote !</TerminalOutput>,
+        ]));
+      },
       description: 'display the game status.',
       auth: false,
       game: false,
@@ -127,13 +156,6 @@ export default function Home(props) {
       game: true,
       display: true,
     },
-    /*flip: {
-      action: () => [],
-      description: 'change team.',
-      auth: true,
-      game: true,
-      display: true,
-    },*/
     claim: {
       action: () => [],
       description: 'get your rewards.',
@@ -171,7 +193,9 @@ export default function Home(props) {
     let ld = [...lineData];
     ld.push(<TerminalInput>{input}</TerminalInput>);
     const keys = Object.keys(commands);
-    const userInput = input.toLocaleLowerCase().trim();
+    const userInput = input.toLocaleLowerCase().trim().split(' ')[0];
+    const params = input.toLocaleLowerCase().trim().split(' ').length > 1 ? input.toLocaleLowerCase().trim().split(' ')[1] : '';
+    console.log({ params });
     if (readOnly)
       ld.push(<TerminalOutput>You need to finish your voting process before continuing.</TerminalOutput>);
     else if (keys.indexOf(userInput) === -1)
@@ -182,8 +206,10 @@ export default function Home(props) {
       if ((commands[userInput].auth && !isAuth)
       || (commands[userInput].game && !inGame))
         ld.push(<TerminalOutput>Need permissions</TerminalOutput>);
+      else if (commands[userInput].needArg && !params)
+        ld.push(<TerminalOutput>Format should be: {commands[userInput].example}</TerminalOutput>);
       else {
-        ld.push(commands[userInput].action(commands));
+        ld.push(commands[userInput].action(commands, addslashes(params)));
         if (userInput === 'vote') setReadOnly(true);
       }
     }
@@ -201,6 +227,7 @@ export default function Home(props) {
     >
       <Spin 
         tip="Loading..."
+        style={{ zIndex: 1 }}
         spinning={loading}>
         <Terminal
           name='Censhorship Game'

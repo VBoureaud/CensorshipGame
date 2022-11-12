@@ -8,8 +8,9 @@ const config = {
     "STABLE_DECIMAL": '6',
   },
   "PROD": {
-    "CHAIN_ID": 4,
-    "RPC": "https://rinkeby.infura.io/v3/",
+    "CHAIN_ID": 10,
+    //"RPC": "https://opt-mainnet.g.alchemy.com/v2/ztRhUG0m12snNlL1UcxtBzYMtv9yCs0f",
+    "RPC": "https://opt-goerli.g.alchemy.com/v2/khOwzTpgLhQosFzHkANN1t504QNzdBqJ",
     "NATIVE_DECIMAL": '18',
     "STABLE_DECIMAL": '6',
   },

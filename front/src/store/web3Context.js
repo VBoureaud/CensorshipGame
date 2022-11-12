@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import { ethers, utils } from "ethers";
+import { generateNonce } from "../utils";
 import Web3Modal from "web3modal";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import WalletConnect from "@walletconnect/web3-provider";
+import { storageData, getStorage, rmStorage } from './localStorage';
 
 import config from "../config.js";
 
@@ -16,6 +18,13 @@ const Web3Context = React.createContext({
     loading: false,
 
     initWeb3Modal: () => {},
+    resetGame: () => {},
+    getStatus: () => {},
+    joinGame: () => {},
+    voteToSave: () => {},
+    reveal: () => {},
+    flip: () => {},
+    claimWinnings: () => {},
 });
 
 export const Web3ContextProvider = (props) => {
@@ -27,6 +36,8 @@ export const Web3ContextProvider = (props) => {
     const [gameContract, setGameContract] = useState(null);
 
     useEffect(() => {
+        const rand = ethers.Wallet.createRandom();
+        console.log({ rand });
         const initUrlWeb3 = async () => {
             setLoading(true)
             try {
@@ -110,19 +121,66 @@ export const Web3ContextProvider = (props) => {
         }
     }
 
-    const joinGame = async (callback) => {
-        try {
-            setLoadingGame(true);
-            const tx = await gameContract.joinGame('commitment');
+    const resetGame = () => {
+        rmStorage('user_nonce');
+        rmStorage('user_nonce2');
+        window.location.href = window.location.href;
+    }
 
-            tx.wait().then(() => {
-                setLoadingGame(false);
-                if (callback) callback(true);
-            });
+    const getStatus = async (callback) => {
+        try {
+            console.log('getStatus');
+            setLoadingGame(true);
+            const playersAddr = await gameContract.playersList();
+            const playersName = await gameContract.namesList();
+            const round = await gameContract.round();
+            const gameStart = await gameContract.gameStart();
+            console.log({ round });
+            console.log({ gameStart });
+            const listPlayers = playersAddr.map((elt, index) => ({ name: playersName[index], address: elt }));
+            console.log({ listPlayers });
+            if (callback) callback(listPlayers);
+            //console.log('Fail to join the game');
         }
         catch (e) {
             console.log({ e });
-            if (callback) callback(false);
+            //if (callback) callback('Fail to join the game');
+            console.log('Fail');
+            setLoadingGame(false);
+        }
+
+    }
+
+    const joinGame = async (name, callback) => {
+        try {
+            console.log('joinGame');
+            setLoadingGame(true);
+            const nonce = generateNonce();
+            const nonce2 = generateNonce();
+            await storageData('user_nonce', nonce);
+            await storageData('user_nonce2', nonce2);
+
+            console.log({ nonce });
+            console.log({ nonce2 });
+            const keccak = ethers.utils.solidityKeccak256(['bytes32', 'bytes32'], [ nonce, nonce2 ]);
+            console.log({ keccak });
+            const tx = await gameContract.joinGame(
+                keccak,
+                name,
+            );
+
+            tx.wait().then(() => {
+                setLoadingGame(false);
+                if (callback) callback('You joined the game.');
+                console.log('You joined the game.');
+            });
+            //if (callback) callback('Fail to join the game');
+            //console.log('Fail to join the game');
+        }
+        catch (e) {
+            console.log({ e });
+            if (callback) callback('Fail to join the game');
+            console.log('Fail to join the game');
             setLoadingGame(false);
         }
     }
@@ -200,11 +258,13 @@ export const Web3ContextProvider = (props) => {
     return (
         <Web3Context.Provider
             value={{
-                //web3,
+                web3,
                 signer,
                 loading,
                 account,
                 initWeb3Modal,
+                resetGame,
+                getStatus,
                 joinGame,
                 voteToSave,
                 reveal,

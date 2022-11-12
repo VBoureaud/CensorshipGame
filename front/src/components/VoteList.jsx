@@ -14,11 +14,11 @@ function VoteList(props) {
     //get list here
     setInitLoading(false);
     const res = {"results":[
-      { "id": 0, "name":"Test","address":"0x1c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
+      { "id": 0, "name":"Test","address":"0x2cdsdf656CA92e841e10889F3209a905aee77", "value": 0 },
       { "id": 1, "name":"Test2","address":"0x1c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
-      { "id": 2, "name":"Test3","address":"0x1c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
-      { "id": 3, "name":"Test4","address":"0x1c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
-      { "id": 4, "name":"Test5","address":"0x1c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
+      { "id": 2, "name":"Test3","address":"0x8c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
+      { "id": 3, "name":"Test4","address":"0x7c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
+      { "id": 4, "name":"Test5","address":"0x0c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
     ]};
     setList(res.results);
     if (props.onChange)
