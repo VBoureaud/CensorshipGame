@@ -1,0 +1,8 @@
+.react-terminal-wrapper {
+	height: 100vh;
+}
+.command {
+	background: #575757;
+	color: #fff;
+	padding: 5px;
+}
