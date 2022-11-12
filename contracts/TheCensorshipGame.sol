@@ -40,8 +40,8 @@ contract TheCensorshipGame is Ownable {
     bool withdrew;
   }
 
-  uint256 redTeamCount;
-  uint256 blueTeamCount;
+  uint256 public redTeamCount;
+  uint256 public blueTeamCount;
   mapping(address => Player) public playerDetails;
   uint256 public gameStart;
   uint256 public round;
@@ -60,6 +60,14 @@ contract TheCensorshipGame is Ownable {
   constructor() payable {
     PRIZE_POOL = msg.value;
     scoreList[scoreListGuard] = ScoreListItem(address(0), type(uint256).max, address(0));
+  }
+
+  function getPlayers() returns (address[] memory players) {
+    address candidate = scoreListGuard;
+    for(uint256 i; i < scoreListLength; i++) {
+      players.push(scoreList[candidate].next);
+      candidate = scoreList[candidate].next;
+    }
   }
 
   function _append(address player) internal {
@@ -91,6 +99,7 @@ contract TheCensorshipGame is Ownable {
           cutOffAddress = cutOffAddress = scoreList[cutOffAddress].prev;
         if(candidate == scoreListTail)
           scoreListTail = player;
+        return;
       }
     }
   }
@@ -101,7 +110,7 @@ contract TheCensorshipGame is Ownable {
   }
 
   function _getIndex(uint256 index) internal view returns (address) {
-    require(index < scoreListLength);
+    require(index < scoreListLength, "index too long");
     address candidate = scoreListGuard;
     for(uint256 i; i < index + 1; i++) {
       candidate = scoreList[candidate].next;
@@ -136,9 +145,9 @@ contract TheCensorshipGame is Ownable {
     uint256[] calldata weights,
     bool flip
   ) external notCensored {
-    require(gameStart > 0);
-    require(round % 2 == 0);
-    require(playerDetails[msg.sender].didVote & 1 << (round/2) == 0);
+    require(gameStart > 0, "GAME NOT STARTED");
+    require(round % 2 == 0, "NOT EVEN ROUND");
+    require(playerDetails[msg.sender].didVote & 1 << (round/2) == 0, "ALREADY VOTED");
     _validateVote(saved, weights);
 
     playerDetails[msg.sender].didVote |= uint64(1 << (round/2));
@@ -160,23 +169,22 @@ contract TheCensorshipGame is Ownable {
   }
 
   function _flip() internal {
-    require(gameStart > 0);
-    require(round % 2 == 0);
-    require(playerDetails[msg.sender].didFlip & 1 << (round/2) == 0);
+    require(playerDetails[msg.sender].didFlip & 1 << (round/2) == 0, "ALREADY FLIPPED");
 
     playerDetails[msg.sender].didFlip |= uint64(1 << (round/2));
     emit PlayerFlipped(msg.sender);
   }
 
   function reveal(bytes32 seed, bytes32 nonce) external {
-    require(gameStart > 0);
-    require(round % 2 == 1);
+    require(gameStart > 0, "GAME NOT STARTED");
+    require(round % 2 == 1, "NOT REVEAL ROUND");
     bytes32 commit = playerDetails[msg.sender].commitment;
     require(
       commit != bytes32(0) &&
-      commit == keccak256(abi.encodePacked(seed,nonce))
+      commit == keccak256(abi.encodePacked(seed,nonce)),
+      "commit doesn't match"
     );
-    require(playerDetails[msg.sender].revealedRole == type(uint64).max);
+    require(playerDetails[msg.sender].revealedRole == type(uint64).max, "ALREADY REVEALED");
 
     uint256 currTeam = _getCurrentTeam(seed, playerDetails[msg.sender].didFlip);
     playerDetails[msg.sender].revealedRole = uint64(currTeam);
@@ -194,11 +202,11 @@ contract TheCensorshipGame is Ownable {
   }
 
   function claimWinnings() external {
-    require(playerDetails[msg.sender].withdrew == false);
-    require(cutOffPoint == 0);
+    require(playerDetails[msg.sender].withdrew == false, "ALREADY WITHDREW");
+    require(cutOffPoint == 0), "GAME NOT OVER";
     uint256 winningTeam = playerDetails[scoreList[scoreListGuard].next].revealedRole;
-    require(winningTeam < 2);
-    require(winningTeam == playerDetails[msg.sender].revealedRole);
+    require(winningTeam < 2, "WINNER DIDNT REVEAL");
+    require(winningTeam == playerDetails[msg.sender].revealedRole, "NOT A WINNER");
 
     uint256 amountOfWinners = winningTeam == 0 ? redTeamCount: blueTeamCount;
     playerDetails[msg.sender].withdrew = true;
@@ -229,7 +237,7 @@ contract TheCensorshipGame is Ownable {
   modifier notCensored() {
     if (round > 0) {
       require(
-        scoreList[cutOffAddress].score <
+        scoreList[cutOffAddress].score =<
         scoreList[msg.sender].score
       );
     }
