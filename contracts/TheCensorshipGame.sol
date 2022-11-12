@@ -48,6 +48,7 @@ contract TheCensorshipGame is Ownable {
   uint256 public cutOffPoint;
   bytes32 public publicSeed;
   address[] public players;
+  string[] public names;
 
 
   mapping(address => ScoreListItem) public scoreList;
@@ -115,6 +116,10 @@ contract TheCensorshipGame is Ownable {
       return players;
   }
 
+  function namesList() external view returns (string[] memory) {
+    return names;
+  }
+
   function joinGame(bytes32 commitment, string calldata name) external {
     // require(ETH_BRNO_NFT.balanceOf(msg.sender) > 0);
     require(gameStart == 0);
@@ -123,6 +128,7 @@ contract TheCensorshipGame is Ownable {
 
     _append(msg.sender);
     players.push(msg.sender);
+    names.push(name);
     playerDetails[msg.sender] = Player(
       commitment, 0, 0, type(uint64).max, name, false
     );
