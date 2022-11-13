@@ -158,8 +158,7 @@ contract TheCensorshipGame is Ownable {
 
     for(uint256 i; i < saved.length; i++) {
       uint256 score =  uint64(Math.sqrt(10000*weights[i]));
-      scoreList[saved[i]].score += score;
-      _updateScoreList(saved[i], score);
+      _updateScoreList(saved[i], scoreList[saved[i]].score + score);
     }
 
     if(flip) {
@@ -186,7 +185,7 @@ contract TheCensorshipGame is Ownable {
     require(
       commit != bytes32(0) &&
       commit == keccak256(abi.encodePacked(seed,nonce)),
-      "commit doesn't match"
+      "INVALID COMMIT"
     );
     require(playerDetails[msg.sender].revealedRole == type(uint64).max, "ALREADY REVEALED");
 
