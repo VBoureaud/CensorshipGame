@@ -254,15 +254,15 @@ contract TheCensorshipGame is Ownable {
     _;
   }
 
-  function _getStartingTeam(bytes32 seed) internal view returns (uint256) {
+  function getStartingTeam(bytes32 seed) public view returns (uint256) {
     return uint256(keccak256(abi.encodePacked(seed, publicSeed))) % 2;
   }
 
   function _getCurrentTeam(bytes32 seed, uint256 didFlip) internal view returns (uint256) {
     if (_popCount(didFlip) % 2 == 0) {
-      return _getStartingTeam(seed);
+      return getStartingTeam(seed);
     }
-    return _getStartingTeam(seed) ^ 1;
+    return getStartingTeam(seed) ^ 1;
   }
 
   function _validateVote(
