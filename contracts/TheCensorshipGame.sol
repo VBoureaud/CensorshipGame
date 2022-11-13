@@ -232,6 +232,10 @@ contract TheCensorshipGame is Ownable {
     return scoreList[msg.sender].score >= scoreList[cutOffAddress].score;
   }
 
+  function didVote() external view returns (bool) {
+    return playerDetails[msg.sender].didVote & 1 << (round/2) > 0;
+  }
+
   function _endRound() internal {
     if (round % 2 == 0) {
       cutOffPoint /= 2;
@@ -255,6 +259,10 @@ contract TheCensorshipGame is Ownable {
 
   function getStartingTeam(bytes32 seed) public view returns (uint256) {
     return uint256(keccak256(abi.encodePacked(seed, publicSeed))) % 2;
+  }
+
+  function getMyColor(bytes32 seed) external view returns (uint256) {
+      return _getCurrentTeam(seed, playerDetails[msg.sender].didFlip);
   }
 
   function _getCurrentTeam(bytes32 seed, uint256 didFlip) internal view returns (uint256) {
