@@ -17,7 +17,7 @@ contract TheCensorshipGame is Ownable {
 
   event GameStarted(uint256 startTime, bytes32 random);
   event GameOver(address winner, uint256 winningTeam);
-  event PlayerRevealed(address player, TEAM team);
+  event PlayerRevealed(address player, uint256 team);
   event PlayerFlipped(address player);
   event EndRound(uint256 round);
 
@@ -192,11 +192,6 @@ contract TheCensorshipGame is Ownable {
 
     uint256 currTeam = _getCurrentTeam(seed, playerDetails[msg.sender].didFlip);
     playerDetails[msg.sender].revealedRole = uint64(currTeam);
-    if (currTeam == 0) {
-      redTeamCount++;
-    } if (currTeam == 1) {
-      blueTeamCount++;
-    }
     
     roundVoteCount++;
     if (
@@ -209,9 +204,13 @@ contract TheCensorshipGame is Ownable {
       }
       _endRound();
     }
+    if (currTeam == 0) {
+      redTeamCount++;
+    } if (currTeam == 1) {
+      blueTeamCount++;
+    }
 
-
-    emit PlayerRevealed(msg.sender, TEAM(currTeam));
+    emit PlayerRevealed(msg.sender, currTeam);
   }
 
   function claimWinnings() external {
