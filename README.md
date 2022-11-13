@@ -11,22 +11,27 @@ It is a proof of concept for a new genre of games that allow players to have sec
 
 ## Rules 
 
-- there are 2 teams = 2 colors
-- when the game starts you get assigned a color 
-  - you are the only one knowing your color
+- there are 2 teams = 2 colors 🔴 / 🔵
+
+- when the game starts you get assigned a color (note: you are the only one knowing your color)
+
 - every round you can choose which participant you want to save
+
 - the goal of the game is to be on the winning team by any means necessary
+
 - each round you are assigned 100 points, choose:
   - who you want to save from the list of participants
     - can’t vote for yourself 
-  - there’s a limited time to vote (10min), or until every player has voted 
+    - there’s a limited time to vote (10min), or until every player has voted 
   - a value (points) to assign to each participant you want to save
     - keep in mind it’s quadratic voting 
   - if you want to flip side (change color) 
     - only if you’re not dead
 
-every round the bottom half of players by votes are “redacted” (eliminated)
+- every round the bottom half of players by votes are “redacted” (eliminated)
 
+
+### game flow
 ![Censorship Game flow](CG_flow.jpg)
 
 ## How to Play
