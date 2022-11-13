@@ -56,7 +56,7 @@ export default function Home(props) {
   }, [account]);
 
   const helpFn = (commands) => ([
-    <TerminalOutput key={0}>Welcome to the <b>Censhorship Game</b>!&#128075;&#128377;&#127942;</TerminalOutput>,
+    <TerminalOutput key={0}>Welcome to the <b>Censorship Game</b>!&#128075;&#128377;&#127942;</TerminalOutput>,
     <TerminalOutput key={1}>Join the game and try to make your color team survive.</TerminalOutput>,
     <TerminalOutput key={2}>We are deployed on <b>Optimism Goerli</b>.</TerminalOutput>,
     <TerminalOutput key={3}></TerminalOutput>,
@@ -294,7 +294,7 @@ export default function Home(props) {
         style={{ zIndex: 1 }}
         spinning={loading}>
         <Terminal
-          name='Censhorship Game'
+          name='Censorship Game'
           colorMode={ ColorMode.Dark }
           onInput={ onInput }>
           { lineData.map((elt, index) => <span key={index}>{elt}</span>) }

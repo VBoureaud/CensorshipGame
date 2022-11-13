@@ -155,7 +155,7 @@ export const Web3ContextProvider = (props) => {
                 walletlink: {
                     package: CoinbaseWalletSDK,
                     options: {
-                        appName: "CenshorshipGame",
+                        appName: "CensorshipGame",
                         infuraId: ''
                     }
                 },

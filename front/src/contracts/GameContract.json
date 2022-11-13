@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "TheCensorshipGame",
-  "sourceName": "contracts/TheCenshorshipGame.sol",
+  "sourceName": "contracts/TheCensorshipGame.sol",
   "abi":    [
       {
         "inputs": [],
