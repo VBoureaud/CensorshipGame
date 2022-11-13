@@ -22,6 +22,25 @@
 		"inputs": [
 			{
 				"indexed": false,
+				"internalType": "address",
+				"name": "winner",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "winningTeam",
+				"type": "uint256"
+			}
+		],
+		"name": "GameOver",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
 				"internalType": "uint256",
 				"name": "startTime",
 				"type": "uint256"

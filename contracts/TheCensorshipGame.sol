@@ -16,6 +16,7 @@ contract TheCensorshipGame is Ownable {
   uint256 immutable public PRIZE_POOL;
 
   event GameStarted(uint256 startTime, bytes32 random);
+  event GameOver(address winner, uint256 winningTeam);
   event PlayerRevealed(address player, TEAM team);
   event PlayerFlipped(address player);
   event EndRound(uint256 round);
@@ -198,7 +199,14 @@ contract TheCensorshipGame is Ownable {
     }
     
     roundVoteCount++;
-    if (block.timestamp > roundTimer + 2 minutes) {
+    if (
+      block.timestamp > roundTimer + 2 minutes ||
+      roundVoteCount == cutOffPoint + 1
+    ) {
+      if (cutOffPoint == 0) {
+        emit GameOver(msg.sender, currTeam);
+        return;
+      }
       _endRound();
     }
 
