@@ -10,6 +10,7 @@ The Censorship Game was built during [ETHBrno 2022](https://ethbrno.cz) hackatho
 It is a proof of concept for a new genre of games that allow players to have secret properties/abilities without the complexity or computational overhead of zero knowlege proofs.
 
 ## Rules 
+
 - there are 2 teams = 2 colors
 - when the game starts you get assigned a color 
   - you are the only one knowing your color
@@ -26,6 +27,7 @@ It is a proof of concept for a new genre of games that allow players to have sec
 
 every round the bottom half of players by votes are “redacted” (eliminated)
 
+![Censorship Game flow](CG_flow.jpg)
 
 ## How to Play
 
