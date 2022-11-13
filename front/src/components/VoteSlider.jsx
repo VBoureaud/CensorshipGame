@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Slider, InputNumber } from 'antd';
 
 function VoteList(props) {

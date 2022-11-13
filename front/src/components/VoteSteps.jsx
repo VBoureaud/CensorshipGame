@@ -20,6 +20,8 @@ const VoteSteps = (props) => {
 		content: <>
 			<span style={{ display: 'block', paddingBottom: '15px' }}>Choose who to save.</span>
 			<VoteList
+				account={props.account}
+				listVote={props.listVote}
 				onChange={setList}
 			/>
 		</>

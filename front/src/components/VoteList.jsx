@@ -4,23 +4,11 @@ import { SearchOutlined } from '@ant-design/icons';
 import VoteSlider from "./VoteSlider";
 
 function VoteList(props) {
-  const [initLoading, setInitLoading] = useState(true);
-  const [inputValue, setInputValue] = useState(1);
   const [searchValue, setSearchValue] = useState('');
-  const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    //get list here
-    setInitLoading(false);
-    const res = {"results":[
-      { "id": 0, "name":"Test","address":"0x2cdsdf656CA92e841e10889F3209a905aee77", "value": 0 },
-      { "id": 1, "name":"Test2","address":"0x1c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
-      { "id": 2, "name":"Test3","address":"0x8c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
-      { "id": 3, "name":"Test4","address":"0x7c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
-      { "id": 4, "name":"Test5","address":"0x0c0EafcD1656CA92e841e10889F3209a905aee77", "value": 0 },
-    ]};
-    setList(res.results);
+    setList(props.listVote.filter(elt => elt.address !== props.account.address));
     if (props.onChange)
       props.onChange(list)
   }, []);
@@ -45,7 +33,6 @@ function VoteList(props) {
     />
     <List
       className="demo-loadmore-list"
-      loading={initLoading}
       itemLayout="horizontal"
       dataSource={list.filter(elt => 
         elt.name.toLocaleLowerCase().indexOf(searchValue.toLocaleLowerCase()) !== -1 
