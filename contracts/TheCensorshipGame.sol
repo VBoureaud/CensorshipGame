@@ -180,6 +180,10 @@ contract TheCensorshipGame is Ownable {
   }
 
   function reveal(bytes32 seed, bytes32 nonce) external {
+    require(
+      !stillAlive() ||
+      (cutOffPoint == 0 && msg.sender == scoreList[scoreListGuard].next)
+    );
     require(gameStart > 0, "GAME NOT STARTED");
     require(round % 2 == 1, "NOT REVEAL ROUND");
     bytes32 commit = playerDetails[msg.sender].commitment;
@@ -192,22 +196,22 @@ contract TheCensorshipGame is Ownable {
 
     uint256 currTeam = _getCurrentTeam(seed, playerDetails[msg.sender].didFlip);
     playerDetails[msg.sender].revealedRole = uint64(currTeam);
-    
-    roundVoteCount++;
-    if (
-      block.timestamp > roundTimer + 2 minutes ||
-      roundVoteCount == cutOffPoint + 1
-    ) {
-      if (cutOffPoint == 0) {
-        emit GameOver(msg.sender, currTeam);
-        return;
-      }
-      _endRound();
-    }
     if (currTeam == 0) {
       redTeamCount++;
     } if (currTeam == 1) {
       blueTeamCount++;
+    }
+    if (cutOffPoint == 0 && msg.sender == scoreList[scoreListGuard].next) {
+      emit GameOver(msg.sender, currTeam);
+      return;
+    }
+
+    roundVoteCount++;
+    if (
+      block.timestamp > roundTimer + 5 minutes ||
+      (roundVoteCount == cutOffPoint + 1 && cutOffPoint != 0)
+    ) {
+      _endRound();
     }
 
     emit PlayerRevealed(msg.sender, currTeam);
@@ -235,7 +239,7 @@ contract TheCensorshipGame is Ownable {
     _endRound();
   }
 
-  function stillAlive() external view returns (bool) {
+  function stillAlive() public view returns (bool) {
     return scoreList[msg.sender].score >= scoreList[cutOffAddress].score;
   }
 

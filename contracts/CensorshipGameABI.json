@@ -98,9 +98,9 @@
 			},
 			{
 				"indexed": false,
-				"internalType": "enum TheCensorshipGame.TEAM",
+				"internalType": "uint256",
 				"name": "team",
-				"type": "uint8"
+				"type": "uint256"
 			}
 		],
 		"name": "PlayerRevealed",
