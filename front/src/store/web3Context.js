@@ -85,6 +85,7 @@ export const Web3ContextProvider = (props) => {
                       marginTop: '10%',
                     },
                 });
+                getStatus();
                 setInGame(true);
                 setCanVote(true);
             });
@@ -225,7 +226,9 @@ export const Web3ContextProvider = (props) => {
 
             if (didVote && canVote) setCanVote(false);
             else if (!didVote && !canVote && round % 2 === 0 && parseInt(gameStart) > 0) setCanVote(true);
-            console.log({ didVote });
+            const listPlayers = playersAddr.map((elt, index) => ({ name: playersName[index], address: elt }));
+            
+            /*console.log({ didVote });
             console.log({ canVote });
             console.log({ round });
             console.log({ gameStart });
@@ -233,15 +236,14 @@ export const Web3ContextProvider = (props) => {
             console.log({ blueTeamCount });
             console.log({ stillAlive });
             console.log({ gameOver: cutOffPoint === 0 && round > 0 });
-
-            const listPlayers = playersAddr.map((elt, index) => ({ name: playersName[index], address: elt }));
-            setGameOver(cutOffPoint === 0 && round)
             console.log({ inGame: !(cutOffPoint === 0 && round) && parseInt(gameStart) > 0 });
+            console.log({ listPlayers });*/
+
+            setGameOver(cutOffPoint === 0 && round)
             setInGame(!(cutOffPoint === 0 && round) && parseInt(gameStart) > 0)
             setPlayersList(listPlayers);
             setRound(realRound);
             setStillAlive(stillAlive);
-            console.log({ listPlayers });
             if (callback) 
                 callback(
                     listPlayers,
@@ -260,7 +262,6 @@ export const Web3ContextProvider = (props) => {
 
     const joinGame = async (name, callback) => {
         try {
-            console.log('joinGame');
             const playersAddr = await gameContract.playersList();
             if (playersAddr.indexOf(account.address) !== -1) {
                 if (callback) callback('You already in the game.');
@@ -273,9 +274,7 @@ export const Web3ContextProvider = (props) => {
             await storageData('user_nonce', nonce);
             await storageData('user_nonce2', nonce2);
             const keccak = ethers.utils.solidityKeccak256(['bytes32', 'bytes32'], [ nonce, nonce2 ]);
-            console.log({ nonce });
-            console.log({ nonce2 });
-            console.log({ keccak });
+
             const tx = await gameContract.joinGame(
                 keccak,
                 name,
@@ -349,7 +348,7 @@ export const Web3ContextProvider = (props) => {
             let color = await gameContract.getMyColor(seed);
             color = BigNumber.from(color._hex).toString();
 
-            if (callback) callback('Your color is: ' + (color ? 'Red' : 'Blue'));
+            if (callback) callback('Your color is: ' + (!parseInt(color) ? 'Red' : 'Blue'));
             setLoadingGame(false);
         } catch (e) {
             console.log({ e });
