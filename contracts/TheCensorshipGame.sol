@@ -84,8 +84,7 @@ contract TheCensorshipGame is Ownable {
   function _insert(address player, uint256 score) internal {
     address candidate = scoreListGuard;
     while(true) {
-      candidate = scoreList[candidate].next;
-      if(scoreList[player].score > scoreList[candidate].score) {
+      if(scoreList[player].score >= scoreList[candidate].score) {
         scoreList[player] = ScoreListItem(scoreList[candidate].prev, score, candidate);
         scoreList[scoreList[candidate].prev].next = player;
         scoreList[candidate].prev = player;
@@ -95,6 +94,7 @@ contract TheCensorshipGame is Ownable {
           scoreListTail = player;
         return;
       }
+      candidate = scoreList[candidate].next;
     }
   }
 
@@ -167,7 +167,7 @@ contract TheCensorshipGame is Ownable {
     }
 
     roundVoteCount++;
-    if (roundVoteCount == cutOffPoint || block.timestamp > roundTimer + 10 minutes) {
+    if (roundVoteCount == cutOffPoint + 1 || block.timestamp > roundTimer + 10 minutes) {
       _endRound();
     }
   }
@@ -198,9 +198,11 @@ contract TheCensorshipGame is Ownable {
       blueTeamCount++;
     }
     
+    roundVoteCount++;
     if (block.timestamp > roundTimer + 2 minutes) {
       _endRound();
     }
+
 
     emit PlayerRevealed(msg.sender, TEAM(currTeam));
   }
@@ -225,6 +227,10 @@ contract TheCensorshipGame is Ownable {
 
   function endRound() external onlyOwner {
     _endRound();
+  }
+
+  function stillAlive() external view returns (bool) {
+    return scoreList[msg.sender].score >= scoreList[cutOffAddress].score;
   }
 
   function _endRound() internal {
