@@ -10,7 +10,7 @@ const VoteSteps = (props) => {
 	const [changeTeam, setChangeTeam] = useState(false);
 
 	const next = () => {
-		if (current === 0) {
+		/*if (current === 0) {
 			// check sum is not bigger than props.limitVote
 			const votes = list.map((elt) => elt.value);
 			const total = votes ? votes.reduce((x, y) => x + y) : 0;
@@ -18,7 +18,7 @@ const VoteSteps = (props) => {
 				message.error('Limit Vote: ' + props.voteLimit);
 				return false;
 			}
-		}
+		}*/
 		setCurrent(current + 1);
 	};
 	const prev = () => {
