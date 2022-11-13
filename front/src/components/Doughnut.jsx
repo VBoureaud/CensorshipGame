@@ -24,6 +24,9 @@ function mDoughnut(props) {
     ],
   };
 
+  if (props.values.length !== 2 || (props.values[0] === "0" && props.values[1] === "0"))
+    return <></>;
+
   return <div style={{ maxWidth: '400px', marginBottom: '15px' }}>
     <Doughnut data={data} />
   </div>;
