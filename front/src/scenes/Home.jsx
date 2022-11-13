@@ -6,7 +6,6 @@ import Web3Context from "../store/web3Context";
 import Doughnut from "../components/Doughnut";
 import VoteSteps from "../components/VoteSteps";
 
-//import Web2Context from "../store/web2Context";
 import config from "../config.js";
 import "./Home.css";
 
@@ -153,6 +152,7 @@ export default function Home(props) {
       action: () => {
         const noVoteTime = <>You cannot vote yet.</>;
         const voteTime = (<VoteSteps
+          voteLimit={config.voteLimit}
           account={account}
           listVote={playersList.map((elt, id) => ({ id, ...elt, vote: 0 }))}
           onConfirm={handleVote}

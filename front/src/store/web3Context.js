@@ -99,6 +99,21 @@ export const Web3ContextProvider = (props) => {
                 setCanVote(!(round % 2));
                 getStatus();
             });
+            gameContract.on("GameOver", (winner, winningTeam)=> {
+                console.log(winner);
+                console.log(winningTeam);
+                message.open({
+                    content: 'Game is over. Team: ' + winningTeam + ' win !',
+                    className: 'custom-class',
+                    style: {
+                      marginTop: '10%',
+                    },
+                });
+                setInGame(false);
+                setGameOver(true);
+                setStillAlive(false);
+                getStatus();
+            });
             gameContract.on("PlayerRevealed", (player, team)=> {
                 message.open({
                     content: 'A Player just reveal.',
@@ -331,7 +346,9 @@ export const Web3ContextProvider = (props) => {
         try {
             setLoadingGame(true);
             const seed = await getStorage('user_nonce');
-            const color = await gameContract.getMyColor(seed);
+            let color = await gameContract.getMyColor(seed);
+            color = BigNumber.from(color._hex).toString();
+
             if (callback) callback('Your color is: ' + (color ? 'Red' : 'Blue'));
             setLoadingGame(false);
         } catch (e) {

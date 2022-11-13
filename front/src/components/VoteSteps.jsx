@@ -1,4 +1,4 @@
-import { Button, Steps, Switch } from 'antd';
+import { Button, Steps, Switch, message } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import VoteList from './VoteList';
@@ -10,6 +10,15 @@ const VoteSteps = (props) => {
 	const [changeTeam, setChangeTeam] = useState(false);
 
 	const next = () => {
+		if (current === 0) {
+			// check sum is not bigger than props.limitVote
+			const votes = list.map((elt) => elt.value);
+			const total = votes ? votes.reduce((x, y) => x + y) : 0;
+			if (total > props.voteLimit) {
+				message.error('Limit Vote: ' + props.voteLimit);
+				return false;
+			}
+		}
 		setCurrent(current + 1);
 	};
 	const prev = () => {

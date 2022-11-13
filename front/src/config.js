@@ -1,6 +1,7 @@
 const config = {
   "api": "https://127.0.0.1:8080",
   "version": "0.1.0",
+  "voteLimit": 100,
   "LOCAL": {
     "CHAIN_ID": 1337,
     "RPC": "http://127.0.0.1:8545",
