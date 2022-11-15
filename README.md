@@ -11,32 +11,26 @@ It is a proof of concept for a new genre of games that allow players to have sec
 
 ## Rules 
 
-- there are 2 teams = 2 colors 🔴 / 🔵
-
-- when the game starts you get assigned a color (note: you are the only one knowing your color)
-
-- every round you can choose which participant you want to save
-
-- the goal of the game is to be on the winning team by any means necessary
-
-- each round you are assigned 100 points, choose:
-  - who you want to save from the list of participants
-    - can’t vote for yourself 
-    - there’s a limited time to vote (10min), or until every player has voted 
-  - a value (points) to assign to each participant you want to save
-    - keep in mind it’s quadratic voting 
-  - if you want to flip side (change color) 
-    - only if you’re not dead
-
-- every round the bottom half of players by votes are “redacted” (eliminated)
-
-
-### game flow
 ![Censorship Game flow](CG_flow.jpg)
+
+- There are 2 teams = 2 colors 🔴 / 🔵
+- When the game starts you get assigned a color (note: you are the only one knowing your color)
+  - you are the only one who knows your color
+- Every round you can choose which participants you want to save
+- The goal of the game is to be on the winning team by any means necessary
+- Each round you are assigned 100 points, choose:
+  - Who you want to save from the list of participants
+    - Can’t vote for yourself 
+  - A value (points) to assign to each participant you want to save
+    - Keep in mind it’s quadratic voting 
+ - Every round the bottom half of players by votes are “redacted” (eliminated)
+ - Every round you can flip sides (change color), as long as you're not "redacted"
+ - The team of the last man standing wins (even those who have been "redacted")
+
 
 ## How to Play
 
-navigate to [https://censorship-game.vercel.app](https://censorship-game.vercel.app)
+Navigate to [https://censorship-game.vercel.app](https://censorship-game.vercel.app)
 
 - type **connect** to connect your wallet to optimism network (you need ethbrno nft)
 - type **join** to start the game ( a team/color is assigned)

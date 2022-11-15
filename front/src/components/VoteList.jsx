@@ -15,7 +15,8 @@ function VoteList(props) {
 
   const onChange = (id, newValue) => {
     const currentList = list;
-    currentList[id].value = newValue;
+    if (currentList.filter(elt => elt.id === id).length)
+      currentList.filter(elt => elt.id === id)[0].value = newValue;
     setList(currentList);
 
     if (props.onChange)
