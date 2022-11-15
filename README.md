@@ -13,8 +13,8 @@ It is a proof of concept for a new genre of games that allow players to have sec
 
 ![Censorship Game flow](CG_flow.jpg)
 
-- There are 2 teams = 2 colors
-- When the game starts you get assigned a color 
+- There are 2 teams = 2 colors 🔴 / 🔵
+- When the game starts you get assigned a color (note: you are the only one knowing your color)
   - you are the only one who knows your color
 - Every round you can choose which participants you want to save
 - The goal of the game is to be on the winning team by any means necessary
